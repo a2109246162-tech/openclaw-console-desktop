@@ -1,6 +1,8 @@
 # OpenClaw Console（EXE 全功能版）
 
-OpenClaw 微信机器人控制台的**完整桌面版**：Electron + NSIS 安装包，Windows 7 SP1 ~ Windows 11 全支持。用于管理本机网关、配置模型供应商、切换模型优先级、绑定微信，并实时查看 Token 消耗。
+OpenClaw 微信机器人控制台的**完整桌面版**：Electron + NSIS 安装包，**仅支持 Windows 10 / Windows 11**。用于管理本机网关、配置模型供应商、切换模型优先级、绑定微信，并实时查看 Token 消耗。
+
+> **系统要求**：Windows 10 或更高版本。本项目不支持 Windows 7 / 8，请勿在这些系统上安装。
 
 > 配套的轻量 UWP/MSIX 版：[openclaw-console-lite](https://github.com/a2109246162-tech/openclaw-console-lite)
 

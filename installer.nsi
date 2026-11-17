@@ -1,6 +1,6 @@
 ; OpenClaw 控制台 安装程序脚本（v2）
 ; 产物：D:\opclaw\OpenClaw-Setup.exe
-; 支持：Windows 7 SP1 ~ Windows 11
+; 支持：Windows 10 / Windows 11（不支持 Win7/8）
 Unicode true
 !include "MUI2.nsh"
 !include "FileFunc.nsh"
@@ -34,7 +34,7 @@ VIAddVersionKey "FileDescription" "${APP_NAME} 安装程序"
 !define MUI_ICON "${NSISDIR}\Contrib\Graphics\Icons\modern-install.ico"
 !define MUI_UNICON "${NSISDIR}\Contrib\Graphics\Icons\modern-uninstall.ico"
 !define MUI_WELCOMEPAGE_TITLE "欢迎安装 ${APP_NAME}"
-!define MUI_WELCOMEPAGE_TEXT "本程序将安装 OpenClaw 微信机器人控制台。$\r$\n$\r$\n支持 Windows 7 SP1 及以上全部 Windows 版本。$\r$\n$\r$\n点击「下一步」继续。"
+!define MUI_WELCOMEPAGE_TEXT "本程序将安装 OpenClaw 微信机器人控制台。$\r$\n$\r$\n仅支持 Windows 10 / Windows 11，不支持 Windows 7/8。$\r$\n$\r$\n点击「下一步」继续。"
 !define MUI_DIRECTORYPAGE_TEXT_TOP "请选择安装位置。建议安装到非系统盘（例如 D 盘）以节省 C 盘空间。"
 !define MUI_FINISHPAGE_RUN "$INSTDIR\${APP_EXE}"
 !define MUI_FINISHPAGE_RUN_TEXT "立即启动 ${APP_NAME}"
@@ -54,18 +54,10 @@ VIAddVersionKey "FileDescription" "${APP_NAME} 安装程序"
 
 ; ---------- 安装前检查 ----------
 Function .onInit
-  ; 系统版本检测（Win7 SP1 起）
-  ${IfNot} ${AtLeastWin7}
-    MessageBox MB_ICONSTOP "本程序需要 Windows 7 SP1 或更高版本。"
+  ; 系统版本检测（仅 Windows 10 / 11）
+  ${IfNot} ${AtLeastWin10}
+    MessageBox MB_ICONSTOP "本程序仅支持 Windows 10 或更高版本，不支持 Windows 7/8。"
     Abort
-  ${EndIf}
-
-  ; Win7 提示：VC++ 运行库将自动补装，无需手动处理；仅提醒 SP1。
-  ${If} ${IsWin7}
-    MessageBox MB_OK|MB_ICONINFORMATION \
-      "检测到 Windows 7。$\r$\n$\r$\n所需的 Visual C++ 运行库将随本程序自动安装，无需手动处理。$\r$\n$\r$\n请确认系统已安装 Windows 7 Service Pack 1 (SP1)，否则网关可能无法启动。" \
-      IDOK win7ok
-    win7ok:
   ${EndIf}
 
   ; 覆盖安装时自动关闭「目标目录里」的旧实例（按 exe 路径精确匹配，
@@ -97,7 +89,7 @@ Section "主程序" SecMain
 
   ; 注意：绝不终止或删除系统上其他 OpenClaw 实例（本安装只写自己的目录）
 
-  ; Win7/8 常见缺少 VC++ 运行库 → Node 网关无法启动，这里自动补装
+  ; 部分系统（尤其精简版）可能缺少 VC++ 运行库 → Node 网关无法启动，这里自动补装
   IfFileExists "$SYSDIR\vcruntime140.dll" vcSkip 0
     DetailPrint "正在安装 VC++ 2015-2022 运行库（网关运行必需）..."
     SetOutPath "$TEMP"
